@@ -7,7 +7,7 @@
     "url": "https://github.com/Kiranism"
   },
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -57,10 +57,12 @@
     "date-fns": "^2.30.0",
     "eslint": "8.48.0",
     "eslint-config-next": "^14.0.1",
+    "firebase": "^11.0.1",
+    "firebase-admin": "^12.6.0",
     "lucide-react": "^0.447.0",
     "match-sorter": "^6.3.4",
     "next": "^14.2.3",
-    "next-auth": "^5.0.0-beta.18",
+    "next-auth": "^4.24.8",
     "next-themes": "^0.2.1",
     "nextjs-toploader": "^1.6.12",
     "nuqs": "^1.19.1",

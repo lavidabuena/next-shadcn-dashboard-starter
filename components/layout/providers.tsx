@@ -1,12 +1,13 @@
 'use client';
 import React from 'react';
 import ThemeProvider from './ThemeToggle/theme-provider';
-import { SessionProvider, SessionProviderProps } from 'next-auth/react';
+import { SessionProvider } from 'next-auth/react';
+import { Session } from 'next-auth';
 export default function Providers({
   session,
   children
 }: {
-  session: SessionProviderProps['session'];
+  session: Session | null | undefined; // 型を明示的に修正
   children: React.ReactNode;
 }) {
   return (

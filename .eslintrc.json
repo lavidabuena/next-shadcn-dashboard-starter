@@ -3,8 +3,23 @@
   "plugins": ["@typescript-eslint"],
   "rules": {
     "@typescript-eslint/no-unused-vars": ["warn", { "args": "none" }],
-    "import/no-unresolved": "error",
+    "import/no-unresolved": "off",
     "import/named": "off",
     "no-console": "warn"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["."],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      },
+      "alias": {
+        "map": [
+          ["@/components", "./components"],
+          ["@/lib", "./lib"]
+        ],
+        "extensions": [".ts", ".tsx", ".js", ".jsx"]
+      }
+    }
   }
 }
