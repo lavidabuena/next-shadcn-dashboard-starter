@@ -14,6 +14,27 @@ import {
 import { signOut, useSession } from 'next-auth/react';
 export function UserNav() {
   const { data: session } = useSession();
+  const handleSignOut = async () => {
+    if (session?.user?.uid) {
+      // Firebaseトークン無効化APIを呼び出す
+      await fetch('/api/auth/revokeToken', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ uid: session.user.uid })
+      });
+
+      // セッションを削除し、リダイレクトする
+      signOut({ redirect: false }).then(() => {
+        localStorage.clear();
+        window.location.href = '/signin';
+      });
+    } else {
+      signOut();
+    }
+  };
+
   if (session) {
     return (
       <DropdownMenu>
@@ -56,7 +77,7 @@ export function UserNav() {
             <DropdownMenuItem>New Team</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => signOut()}>
+          <DropdownMenuItem onClick={handleSignOut}>
             Log out
             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
           </DropdownMenuItem>

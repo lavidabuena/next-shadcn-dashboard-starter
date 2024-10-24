@@ -43,7 +43,7 @@ import {
   GalleryVerticalEnd,
   LogOut
 } from 'lucide-react';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
@@ -67,6 +67,27 @@ export default function AppSidebar({
   const [mounted, setMounted] = React.useState(false);
   const { data: session } = useSession();
   const pathname = usePathname();
+
+  const handleSignOut = async () => {
+    if (session?.user?.uid) {
+      // Firebaseトークン無効化APIを呼び出す
+      await fetch('/api/auth/revokeToken', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ uid: session.user.uid })
+      });
+
+      // セッションを削除し、リダイレクトする
+      signOut({ redirect: false }).then(() => {
+        localStorage.clear();
+        window.location.href = '/signin';
+      });
+    } else {
+      signOut();
+    }
+  };
   // Only render after first client-side mount
   React.useEffect(() => {
     setMounted(true);
@@ -226,7 +247,7 @@ export default function AppSidebar({
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleSignOut}>
                     <LogOut />
                     Log out
                   </DropdownMenuItem>

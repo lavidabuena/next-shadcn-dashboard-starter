@@ -1,5 +1,5 @@
 import { admin } from '@/app/src/firebase/admin';
-import type { NextAuthOptions } from 'next-auth';
+import type { DefaultSession, NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 const fetchNewIdToken = async (refreshToken: string) => {
@@ -81,6 +81,10 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
+      if (!token) {
+        // トークンがない場合、nullの代わりに空のセッションを返す
+        return {} as DefaultSession;
+      }
       // sessionにFirebase Authenticationで取得した情報を追加。
       (session.user.emailVerified = token.emailVerified as Date | null),
         (session.user.uid = token.idToken as string),
