@@ -103,3 +103,25 @@
     @apply bg-background text-foreground;
   }
 }
+@layer base {
+  @font-face {
+    font-family: 'Panchang-Bold';
+    src: url('/fonts/panchang-bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+  }
+}
+
+@layer components {
+  .text-6xl {
+    font-size: 4rem;
+  }
+
+  .bg-black {
+    background-color: #000;
+  }
+
+  .text-white {
+    color: #fff;
+  }
+}
