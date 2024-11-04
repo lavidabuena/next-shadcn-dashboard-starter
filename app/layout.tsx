@@ -1,13 +1,9 @@
 import { Toaster } from '@/components/ui/sonner';
-import type { Metadata } from 'next';
 import { Lato } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
 import './globals.css';
-
-export const metadata: Metadata = {
-  title: 'Next Shadcn',
-  description: 'Basic dashboard with Next.js and Shadcn'
-};
+import { HeaderNav } from '@/components/componentspage/HeaderNav';
+import { FooterNav } from '@/components/componentspage/FooterNav';
 
 const lato = Lato({
   subsets: ['latin'],
@@ -21,11 +17,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${lato.className}`}>
-      <body className={'overflow-hidden'} suppressHydrationWarning={true}>
+    <html lang="jp" className={`${lato.className}`}>
+      <body suppressHydrationWarning={true}>
         <NextTopLoader showSpinner={false} />
         <Toaster />
+        <HeaderNav />
         {children}
+        <FooterNav />
       </body>
     </html>
   );
