@@ -13,15 +13,11 @@ import {
 } from '@/components/ui/pagination';
 import Image from 'next/image';
 import AnimatedText from '@/components/componentspage/AnimatedText';
-
-interface NewsItem {
-  title: string;
-  url: string;
-  category: string;
-}
+import { BlogType } from '@/types/blog';
+import Link from 'next/link';
 
 interface PaginationComponentProps {
-  items: NewsItem[];
+  items: BlogType[];
   itemsPerPage: number;
 }
 
@@ -51,20 +47,22 @@ export default function PaginationComponent({
             <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg">
               <CardContent className="p-0">
                 <div className="relative">
-                  <Image
-                    src={`/placeholder.svg?height=250&width=397`}
-                    alt={item.title}
-                    width={397}
-                    height={250}
-                    className="h-[200px] w-full object-cover md:h-[250px]"
-                  />
+                  <Link href={`/blog/${item.id}`}>
+                    <Image
+                      src={item.thumbnail.url}
+                      alt={item.title}
+                      width={397}
+                      height={250}
+                      className="h-[200px] w-full object-cover md:h-[250px]"
+                    />
+                  </Link>
                   <Badge className="absolute left-4 top-4 bg-blue-500 text-white">
-                    {item.category}
+                    {item.tags[0].name}
                   </Badge>
                 </div>
                 <div className="p-6">
                   <h3
-                    className="mb-2 text-lg font-medium md:text-xl"
+                    className="mb-2 truncate text-lg font-medium md:text-xl"
                     style={{
                       fontFamily: '"Noto Sans JP", sans-serif',
                       letterSpacing: '1.6px'
@@ -72,16 +70,27 @@ export default function PaginationComponent({
                   >
                     {item.title}
                   </h3>
-                  <a
-                    href={item.url}
-                    className="text-sm text-[#F4951F] hover:underline md:text-base"
+                  <p
+                    className="truncate text-sm text-gray-700 md:text-base"
                     style={{
                       fontFamily: '"Noto Sans JP", sans-serif',
                       letterSpacing: '1.6px'
                     }}
                   >
-                    {item.url}
-                  </a>
+                    {item.description}
+                  </p>
+                  {item.link && (
+                    <a
+                      href={item.link}
+                      className="truncate text-sm text-[#F4951F] hover:underline md:text-base"
+                      style={{
+                        fontFamily: '"Noto Sans JP", sans-serif',
+                        letterSpacing: '1.6px'
+                      }}
+                    >
+                      {item.link}
+                    </a>
+                  )}
                 </div>
               </CardContent>
             </Card>

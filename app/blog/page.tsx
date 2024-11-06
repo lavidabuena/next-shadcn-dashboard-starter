@@ -1,8 +1,10 @@
+// app/blog/page.tsx
+
 import React from 'react';
-
 import PaginationComponent from '@/components/componentspage/PaginationComponent';
-
 import { getMetadata } from '@/lib/features/metadata';
+import { client } from '@/libs/micro-client';
+import { BlogType } from '@/types/blog';
 
 export const metadata = getMetadata(
   '最新のWeb制作とデジタルマーケティング情報｜AMANECENブログ',
@@ -17,60 +19,19 @@ export const metadata = getMetadata(
     'AMANECENブログ'
   ]
 );
-const newsItems = [
-  {
-    title: '株式会社ラピネス',
-    url: 'https://lappiness.jp',
-    category: 'Web制作'
-  },
-  {
-    title: 'みんため サービスサイト',
-    url: 'https://mintame.jp/',
-    category: 'サービス'
-  },
-  {
-    title: 'ラフェスタリンク株式会社',
-    url: 'https://hikawa-hybridspray.com/',
-    category: 'コーポレート'
-  },
-  {
-    title: 'デジタルマーケティング最新動向',
-    url: 'https://example.com/digital-marketing',
-    category: 'マーケティング'
-  },
-  {
-    title: 'UI/UXデザイントレンド2024',
-    url: 'https://example.com/design-trends',
-    category: 'デザイン'
-  },
-  {
-    title: 'アプリ開発成功事例',
-    url: 'https://example.com/app-success',
-    category: 'アプリ開発'
-  },
-  {
-    title: 'SEO対策最新ガイド',
-    url: 'https://example.com/seo-guide',
-    category: 'SEO'
-  },
-  {
-    title: 'ウェブセキュリティ入門',
-    url: 'https://example.com/web-security',
-    category: 'セキュリティ'
-  },
-  {
-    title: 'クラウドサービス活用法',
-    url: 'https://example.com/cloud-services',
-    category: 'クラウド'
-  },
-  {
-    title: 'AI導入事例集',
-    url: 'https://example.com/ai-cases',
-    category: 'AI'
-  }
-];
 
-export default function Blog() {
+const BlogPage = async () => {
+  const allBlogs = await client.getList<BlogType>({
+    endpoint: 'blog',
+    queries: {
+      orders: '-publishedAt',
+      limit: 3
+    },
+    customRequestInit: {
+      cache: 'no-store'
+    }
+  });
+
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center">
       <main className="flex-grow justify-items-center">
@@ -91,9 +52,11 @@ export default function Blog() {
               デジタルの世界で一歩先を行くための情報源として、ぜひご活用ください。
             </p>
           </div>
-          <PaginationComponent items={newsItems} itemsPerPage={6} />
+          <PaginationComponent items={allBlogs.contents} itemsPerPage={6} />
         </section>
       </main>
     </div>
   );
-}
+};
+
+export default BlogPage;

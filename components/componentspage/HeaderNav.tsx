@@ -10,10 +10,9 @@ import Image from 'next/image';
 export const HeaderNav = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const isHomePage = pathname != '/';
+  const isHomePage = pathname === '/';
 
-  // Set isVisible to true initially if it's the home page
-  const [isVisible, setIsVisible] = useState(isHomePage);
+  const [isVisible, setIsVisible] = useState(true);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -22,17 +21,23 @@ export const HeaderNav = () => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      if (!isHomePage && currentScrollY > 200) {
+      if (isHomePage) {
+        setIsVisible(currentScrollY > 200);
+      } else {
         setIsVisible(true);
-      } else if (!isHomePage && currentScrollY <= 200) {
-        setIsVisible(false);
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Call once to set initial state
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isHomePage]);
+
+  // Reset visibility when pathname changes
+  useEffect(() => {
+    setIsVisible(true);
+  }, [pathname]);
 
   const navItems = [
     { label: 'ABOUT', href: '/about' },
@@ -43,7 +48,7 @@ export const HeaderNav = () => {
 
   return (
     <nav
-      className={`fixed left-0 right-0 z-50 flex items-center justify-between bg-white px-3  transition-opacity duration-300 md:px-12 ${
+      className={`fixed left-0 right-0 z-50 flex items-center justify-between bg-white px-3 transition-opacity duration-300 md:px-12 ${
         isVisible ? 'opacity-100' : 'pointer-events-none opacity-0'
       }`}
     >

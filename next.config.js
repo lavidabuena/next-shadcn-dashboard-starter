@@ -11,6 +11,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'api.slingacademy.com',
         port: ''
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.microcms-assets.io'
       }
     ]
   },

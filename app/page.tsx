@@ -9,6 +9,8 @@ import AnimatedLottie from '@/components/componentspage/AnimatedLottie';
 import AnimatedText from '@/components/componentspage/AnimatedText';
 import Link from 'next/link';
 import { getMetadata } from '@/lib/features/metadata';
+import { client } from '@/libs/micro-client';
+import { BlogType } from '@/types/blog';
 
 export const metadata = getMetadata(
   'ホームページ - 神奈川・湘南・横浜のWeb制作と集客支援',
@@ -21,13 +23,7 @@ interface Service {
   lottieUrl: string;
 }
 
-interface NewsItem {
-  title: string;
-  url: string;
-  category: string;
-}
-
-export default function Component() {
+export default async function Component() {
   const services: Service[] = [
     {
       title: 'オリジナルホームページ制作',
@@ -67,23 +63,16 @@ export default function Component() {
     }
   ];
 
-  const newsItems: NewsItem[] = [
-    {
-      title: '株式会社ラピネス',
-      url: 'https://lappiness.jp',
-      category: 'Web制作'
+  const allBlogs = await client.getList<BlogType>({
+    endpoint: 'blog',
+    queries: {
+      orders: '-publishedAt',
+      limit: 3
     },
-    {
-      title: 'みんため サービスサイト',
-      url: 'https://mintame.jp/',
-      category: 'サービス'
-    },
-    {
-      title: 'ラフェスタリンク株式会社',
-      url: 'https://hikawa-hybridspray.com/',
-      category: 'コーポレート'
+    customRequestInit: {
+      cache: 'no-store'
     }
-  ];
+  });
 
   return (
     <div>
@@ -279,25 +268,25 @@ export default function Component() {
             </Link>
           </div>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {newsItems.map((item, index) => (
+            {allBlogs.contents.map((item, index) => (
               <AnimatedText key={index} delay={index * 0.1}>
                 <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg">
                   <CardContent className="p-0">
                     <div className="relative">
                       <Image
-                        src={`/placeholder.svg?height=250&width=397`}
+                        src={item.thumbnail.url}
                         alt={item.title}
                         width={397}
                         height={250}
                         className="h-[200px] w-full object-cover md:h-[250px]"
                       />
                       <Badge className="absolute left-4 top-4 bg-blue-500 text-primary-foreground">
-                        {item.category}
+                        {item.tags[0].name}
                       </Badge>
                     </div>
                     <div className="p-6">
                       <h3
-                        className="mb-2 text-lg font-medium md:text-xl"
+                        className="mb-2 truncate text-lg font-medium md:text-xl"
                         style={{
                           fontFamily: '"Noto Sans JP", sans-serif',
                           letterSpacing: '1.6px'
@@ -305,16 +294,27 @@ export default function Component() {
                       >
                         {item.title}
                       </h3>
-                      <a
-                        href={item.url}
-                        className="text-sm text-[#F4951F] hover:underline md:text-base"
+                      <p
+                        className="truncate text-sm text-gray-700 md:text-base"
                         style={{
                           fontFamily: '"Noto Sans JP", sans-serif',
                           letterSpacing: '1.6px'
                         }}
                       >
-                        {item.url}
-                      </a>
+                        {item.description}
+                      </p>
+                      {item.link && (
+                        <a
+                          href={item.link}
+                          className="truncate text-sm text-[#F4951F] hover:underline md:text-base"
+                          style={{
+                            fontFamily: '"Noto Sans JP", sans-serif',
+                            letterSpacing: '1.6px'
+                          }}
+                        >
+                          {item.link}
+                        </a>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
