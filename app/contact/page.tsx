@@ -3,9 +3,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { Check, ChevronRight, Circle, Send } from 'lucide-react';
+import { ChevronRight, Send, X } from 'lucide-react';
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -34,6 +34,15 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog';
+import Link from 'next/link';
 
 const formSchema = z.object({
   companyName: z.string().min(1, '会社名は必須です'),
@@ -50,6 +59,8 @@ const formSchema = z.object({
 
 export default function Component() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showThankYouMessage, setShowThankYouMessage] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: 'onBlur',
@@ -66,26 +77,42 @@ export default function Component() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (isSubmitting) return;
+    setShowConfirmModal(true);
+  }
+
+  async function handleConfirm() {
     setIsSubmitting(true);
+    setShowConfirmModal(false);
     try {
+      const values = form.getValues();
       const validatedData = await formSchema.parseAsync(values);
-      console.log(validatedData);
-      alert('フォームが正常に送信されました。');
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        error.errors.forEach((err) => {
-          if (err.path) {
-            form.setError(err.path[0] as keyof z.infer<typeof formSchema>, {
-              type: 'manual',
-              message: err.message
-            });
-          }
-        });
+
+      const response = await fetch('/api/sendSlackMessage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: `
+                  新規お問い合わせ:
+                  会社名: ${validatedData.companyName}
+                  担当者名: ${validatedData.contactPerson}
+                  電話番号: ${validatedData.phone || 'なし'}
+                  メールアドレス: ${validatedData.email}
+                  ウェブサイト: ${validatedData.website || 'なし'}
+                  お問い合わせ項目: ${validatedData.inquiryType}
+                  メッセージ: ${validatedData.message}
+          `
+        })
+      });
+
+      if (response.ok) {
+        form.reset();
+        setShowThankYouMessage(true);
       } else {
-        console.error('An unexpected error occurred:', error);
-        alert('予期せぬエラーが発生しました。もう一度お試しください。');
+        console.error('Failed to send message');
+        alert('お問い合わせの送信に失敗しました。もう一度お試しください。');
       }
+    } catch (error) {
+      console.error('Validation error:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -112,6 +139,24 @@ export default function Component() {
     }
   ];
 
+  if (showThankYouMessage) {
+    return (
+      <div className="container mx-auto flex min-h-screen items-center justify-center bg-gradient-to-b from-gray-50 to-white px-4 py-12">
+        <Card className="w-full max-w-lg">
+          <CardHeader>
+            <CardTitle className="text-center text-2xl font-bold text-gray-900">
+              お問い合わせありがとうございました。
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-center text-gray-600">
+              内容を確認の上、担当者より2営業日以内にご連絡いたします。
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
   return (
     <div className="container mx-auto  min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-12">
       <div className="mb-8 flex w-full items-center justify-between py-12  md:py-28">
@@ -358,12 +403,12 @@ export default function Component() {
                             個人情報の取り扱いについて、同意する
                           </FormLabel>
                           <FormDescription>
-                            <a
-                              href="/privacy-policy"
+                            <Link
+                              href="/privacypolicy"
                               className="text-blue-600 hover:underline"
                             >
                               個人情報保護方針
-                            </a>
+                            </Link>
                             をお読みのうえ、ご同意願います。
                           </FormDescription>
                         </div>
@@ -414,6 +459,114 @@ export default function Component() {
           </Card>
         </motion.div>
       </div>
+      {/* Confirmation Modal */}
+      <AnimatePresence>
+        {showConfirmModal && (
+          <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle className="text-2xl font-bold text-gray-900">
+                  入力内容の確認
+                </DialogTitle>
+                <DialogDescription className="text-gray-600">
+                  以下の内容でお問い合わせを送信します。よろしいですか？
+                </DialogDescription>
+              </DialogHeader>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="mt-4 space-y-4"
+              >
+                <div className="grid gap-4">
+                  <div className="space-y-2">
+                    <h4 className="font-medium text-gray-900">会社名</h4>
+                    <p className="text-sm text-gray-700">
+                      {form.getValues().companyName}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="font-medium text-gray-900">担当者名</h4>
+                    <p className="text-sm text-gray-700">
+                      {form.getValues().contactPerson}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="font-medium text-gray-900">
+                      メールアドレス
+                    </h4>
+                    <p className="text-sm text-gray-700">
+                      {form.getValues().email}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="font-medium text-gray-900">
+                      お問い合わせ項目
+                    </h4>
+                    <p className="text-sm text-gray-700">
+                      {form.getValues().inquiryType}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="font-medium text-gray-900">
+                      お問い合わせ内容
+                    </h4>
+                    <p className="max-h-24 overflow-y-auto text-sm text-gray-700">
+                      {form.getValues().message}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+              <DialogFooter className="mt-6 flex justify-end space-x-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowConfirmModal(false)}
+                >
+                  <X className="mr-2 h-4 w-4" />
+                  キャンセル
+                </Button>
+                <Button
+                  onClick={handleConfirm}
+                  disabled={isSubmitting}
+                  className="bg-blue-600 text-white hover:bg-blue-700"
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center">
+                      <svg
+                        className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      送信中...
+                    </span>
+                  ) : (
+                    <span className="flex items-center">
+                      <Send className="mr-2 h-4 w-4" />
+                      送信する
+                    </span>
+                  )}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
