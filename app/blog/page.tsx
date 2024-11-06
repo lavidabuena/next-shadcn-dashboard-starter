@@ -26,9 +26,6 @@ const BlogPage = async () => {
     queries: {
       orders: '-publishedAt',
       limit: 3
-    },
-    customRequestInit: {
-      cache: 'no-store'
     }
   });
 

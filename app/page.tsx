@@ -68,9 +68,6 @@ export default async function Component() {
     queries: {
       orders: '-publishedAt',
       limit: 3
-    },
-    customRequestInit: {
-      cache: 'no-store'
     }
   });
 

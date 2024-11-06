@@ -15,10 +15,7 @@ export const generateMetadata = async ({
 }) => {
   const blog = await client.get<BlogType>({
     endpoint: 'blog',
-    contentId: params.blogId,
-    customRequestInit: {
-      cache: 'no-store'
-    }
+    contentId: params.blogId
   });
   return getMetadata(
     blog.title,
@@ -40,10 +37,7 @@ const BlogDetailPage = async ({ params }: { params: { blogId: string } }) => {
   try {
     blog = await client.get<BlogType>({
       endpoint: 'blog',
-      contentId: params.blogId,
-      customRequestInit: {
-        cache: 'no-store'
-      }
+      contentId: params.blogId
     });
   } catch (error) {
     notFound();
@@ -54,9 +48,6 @@ const BlogDetailPage = async ({ params }: { params: { blogId: string } }) => {
     queries: {
       filters: `tags[contains]${blog.tags[0].name}[and]id[not_equals]${blog.id}`,
       limit: 3
-    },
-    customRequestInit: {
-      cache: 'no-store'
     }
   });
 
