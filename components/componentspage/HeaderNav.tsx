@@ -12,7 +12,7 @@ export const HeaderNav = () => {
   const pathname = usePathname();
   const isHomePage = pathname === '/';
 
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -36,8 +36,8 @@ export const HeaderNav = () => {
 
   // Reset visibility when pathname changes
   useEffect(() => {
-    setIsVisible(true);
-  }, [pathname]);
+    if (!isHomePage) setIsVisible(true);
+  }, [isHomePage, pathname]);
 
   const navItems = [
     { label: 'ABOUT', href: '/about' },
