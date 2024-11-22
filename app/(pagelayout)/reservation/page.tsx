@@ -31,13 +31,17 @@ import {
   collection,
   query,
   where,
-  onSnapshot
+  onSnapshot,
+  setLogLevel
 } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { useAppDispatch, useAppSelector } from '@/lib/features/hooks';
 import { addReservationAsync } from '@/lib/features/reservation/reservationSlice';
 import { Reservationlist } from '@/types/reservation';
 import db from '@/app/src/firebase/client';
+
+// Firestoreのデバッグログを有効化
+setLogLevel('debug');
 
 const formSchema = z.object({
   course: z.string({
