@@ -589,9 +589,9 @@ const Page: FC = () => {
                                   isDateDisabled ||
                                   existingReservations.some((reservation) => {
                                     const reservationStart =
-                                      reservation.start.toDate();
+                                      reservation.start!.toDate();
                                     const reservationEnd =
-                                      reservation.end.toDate();
+                                      reservation.end!.toDate();
                                     return (
                                       dateTime >= reservationStart &&
                                       dateTime < reservationEnd
