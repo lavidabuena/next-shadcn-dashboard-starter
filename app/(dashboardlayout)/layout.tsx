@@ -5,6 +5,8 @@ import type { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 
+import '../globals.css';
+
 export const metadata: Metadata = {
   title: 'Next Shadcn Dashboard Starter',
   description: 'Basic dashboard with Next.js and Shadcn'
@@ -21,10 +23,8 @@ export default async function DashboardLayout({
     return redirect('/');
   }
   return (
-    <>
-      <Providers session={session}>
-        <AppSidebar>{session && children}</AppSidebar>
-      </Providers>
-    </>
+    <Providers session={session}>
+      <AppSidebar>{session && children}</AppSidebar>
+    </Providers>
   );
 }
