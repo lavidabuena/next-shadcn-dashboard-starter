@@ -6,6 +6,7 @@ export interface Menu {
   productName: string;
   workingHours: number;
   description: string;
+  category: string[];
   tags: string[];
   price: number;
   createAt: Timestamp | null;
