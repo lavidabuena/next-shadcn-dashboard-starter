@@ -75,7 +75,7 @@ export function TagInput({
                   inputRef.current?.focus();
                 }}
               >
-                Add "{inputValue}"
+                Add &quot;{inputValue}&quot;
               </CommandItem>
             </CommandGroup>
           </div>
