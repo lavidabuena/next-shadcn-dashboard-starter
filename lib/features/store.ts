@@ -7,7 +7,7 @@ import { quotesApiSlice } from './quotes/quotesApiSlice';
 // import { productSlice } from './product/productSlice';
 import { reservationSlice } from './reservation/reservationSlice';
 
-// import { optionSlice } from './option/optionSlice';
+import { optionSlice } from './option/optionSlice';
 import { menuSlice } from './menu/menuSlice';
 
 // `combineSlices` は、それぞれのスライスが持つ `reducerPath` を使用して
@@ -19,7 +19,7 @@ const rootReducer = combineSlices(
   quotesApiSlice,
   // businessHoursSlice,
   // productSlice,
-  // optionSlice,
+  optionSlice,
   reservationSlice,
   menuSlice
 );

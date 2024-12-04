@@ -6,11 +6,11 @@ import { Separator } from '@/components/ui/separator';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import MenuListingPage from './_components/menu-listing';
+import OptionListingPage from './_components/option-listing';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
 
 export const metadata = {
-  title: 'Dashboard: Menus'
+  title: 'Dashboard: オプション'
 };
 
 export default async function Page() {
@@ -19,21 +19,21 @@ export default async function Page() {
       <div className="space-y-4">
         <div className="flex items-start justify-between">
           <Heading
-            title="Menus"
-            description="Manage menu items for your restaurant."
+            title="オプション"
+            description="オプション項目を管理します。"
           />
           <Link
-            href="/dashboard/menu/new"
+            href="/dashboard/option/new"
             className={buttonVariants({ className: 'text-xs md:text-sm' })}
           >
-            <Plus className="mr-2 h-4 w-4" /> Add New
+            <Plus className="mr-2 h-4 w-4" /> 新規追加
           </Link>
         </div>
         <Separator />
         <Suspense
           fallback={<DataTableSkeleton columnCount={5} rowCount={10} />}
         >
-          <MenuListingPage />
+          <OptionListingPage />
         </Suspense>
       </div>
     </PageContainer>

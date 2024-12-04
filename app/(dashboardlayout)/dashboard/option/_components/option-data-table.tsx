@@ -26,15 +26,16 @@ import {
 } from '@/components/ui/table';
 
 import { DataTablePagination } from '@/components/ui/table/data-table-pagination';
-import { Menu } from '@/types/menu';
-import { DataTableToolbar } from './menu-tables/menu-data-table-toolbar';
+
+import { Option } from '@/types/option';
+import { DataTableToolbar } from './option-tables/option-data-table-toolbar';
 
 interface DataTableProps {
-  columns: ColumnDef<Menu>[];
-  data: Menu[];
+  columns: ColumnDef<Option>[];
+  data: Option[];
 }
 
-export function MenuDataTable({ columns, data }: DataTableProps) {
+export function OptionDataTable({ columns, data }: DataTableProps) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
