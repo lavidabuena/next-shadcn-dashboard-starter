@@ -125,63 +125,75 @@ export const navItems: NavItem[] = [
   {
     title: 'Dashboard',
     url: '/dashboard/overview',
-    icon: 'dashboard',
+    icon: 'dashboard', // アイコン例: ダッシュボード
     isActive: false,
-    items: [] // Empty array as there are no child items for Dashboard
+    items: []
   },
   {
     title: 'Employee',
     url: '/dashboard/employee',
-    icon: 'user',
+    icon: 'user', // アイコン例: ユーザー管理
     isActive: false,
-    items: [] // No child items
+    items: []
   },
   {
-    title: 'Product',
-    url: '/dashboard/product',
-    icon: 'product',
+    title: 'Product Management',
+    url: '#', // 親項目にはリンクなし
+    icon: 'box', // アイコン例: 商品管理グループ
     isActive: false,
-    items: [] // No child items
+    items: [
+      {
+        title: 'Menu',
+        url: '/dashboard/menu',
+        icon: 'menu' // アイコン例: メニュー管理
+      },
+      {
+        title: 'Option',
+        url: '/dashboard/option',
+        icon: 'settings' // アイコン例: 設定
+      },
+      {
+        title: 'Category & Tag',
+        url: '/dashboard/categorytag',
+        icon: 'tags' // アイコン例: タグ管理
+      },
+      {
+        title: 'product',
+        url: '/dashboard/product',
+        icon: 'tags' // アイコン例: タグ管理
+      }
+    ]
   },
   {
-    title: 'Menu',
-    url: '/dashboard/menu',
-    icon: 'product',
+    title: 'Reservation Settings',
+    url: '/dashboard/reservation-settings',
+    icon: 'calendar', // アイコン例: 予約設定
     isActive: false,
-    items: [] // No child items
+    items: []
   },
-  {
-    title: 'Option',
-    url: '/dashboard/option',
-    icon: 'product',
-    isActive: false,
-    items: [] // No child items
-  },
-
   {
     title: 'Account',
-    url: '#', // Placeholder as there is no direct link for the parent
-    icon: 'billing',
+    url: '#',
+    icon: 'billing', // アイコン例: アカウント
     isActive: true,
-
     items: [
       {
         title: 'Profile',
         url: '/dashboard/profile',
-        icon: 'userPen'
+        icon: 'userPen' // アイコン例: プロフィール編集
       },
       {
         title: 'Login',
         url: '/',
-        icon: 'login'
+        icon: 'login' // アイコン例: ログイン
       }
     ]
   },
   {
     title: 'Kanban',
     url: '/dashboard/kanban',
-    icon: 'kanban',
+    icon: 'kanban', // アイコン例: カンバン
     isActive: false,
-    items: [] // No child items
+    items: []
   }
 ];

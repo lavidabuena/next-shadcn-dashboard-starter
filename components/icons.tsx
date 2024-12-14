@@ -1,6 +1,7 @@
 import {
   AlertTriangle,
   ArrowRight,
+  Box,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -26,10 +27,13 @@ import {
   SunMedium,
   Trash,
   Twitter,
+  Tags,
+  Menu,
   User,
   UserCircle2Icon,
   UserPen,
   UserX2Icon,
+  Calendar,
   X
 } from 'lucide-react';
 
@@ -58,6 +62,10 @@ export const Icons = {
   add: Plus,
   warning: AlertTriangle,
   user: User,
+  box: Box,
+  menu: Menu,
+  tags: Tags,
+  calendar: Calendar,
   arrowRight: ArrowRight,
   help: HelpCircle,
   pizza: Pizza,

@@ -9,6 +9,9 @@ import { reservationSlice } from './reservation/reservationSlice';
 
 import { optionSlice } from './option/optionSlice';
 import { menuSlice } from './menu/menuSlice';
+import { tagSlice } from './tag/tagSlice';
+import { categorySlice } from './category/categorySlice';
+import { reservationSettingSlice } from './recervation-setting/reservationSettingSlice';
 
 // `combineSlices` は、それぞれのスライスが持つ `reducerPath` を使用して
 // リデューサーを自動的に結合します。そのため、`combineReducers` を
@@ -19,8 +22,11 @@ const rootReducer = combineSlices(
   quotesApiSlice,
   // businessHoursSlice,
   // productSlice,
+  tagSlice,
+  categorySlice,
   optionSlice,
   reservationSlice,
+  reservationSettingSlice,
   menuSlice
 );
 // ルートリデューサーから `RootState` 型を推論
